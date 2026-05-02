@@ -4,221 +4,273 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Microsoft Intelligence Hub — Sprinklr</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #f5f4f0; --surface: #ffffff; --surface2: #f0eeea;
-    --border: rgba(0,0,0,0.08); --border-strong: rgba(0,0,0,0.14);
-    --text: #111110; --text-2: #555450; --text-3: #999894;
-    --accent: #0057d9; --blue: #0057d9; --blue-l: #e8f0fd; --blue-t: #003799;
-    --teal: #0e7f60; --teal-l: #e3f5ee; --teal-t: #095c44;
-    --amber: #b45309; --amber-l: #fef3c7; --amber-t: #7c3a05;
-    --red: #c0392b; --red-l: #fde8e6; --red-t: #8b1a12;
-    --purple: #6d3acd; --purple-l: #f0ebff; --purple-t: #4c2490;
-    --gray-l: #f0eeea; --gray-t: #44433f;
-    --radius: 10px; --radius-lg: 14px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; line-height: 1.6; }
-  .shell { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
-  .header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; gap: 16px; flex-wrap: wrap; }
-  .header-left { display: flex; align-items: center; gap: 14px; }
-  .ms-logo { width: 36px; height: 36px; display: grid; grid-template-columns: 1fr 1fr; gap: 3px; flex-shrink: 0; }
-  .ms-logo div { border-radius: 2px; }
-  .ms-logo .q1 { background: #f25022; } .ms-logo .q2 { background: #7fba00; }
-  .ms-logo .q3 { background: #00a4ef; } .ms-logo .q4 { background: #ffb900; }
-  .header-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
-  .header-sub { font-size: 12px; color: var(--text-3); font-family: 'DM Mono', monospace; margin-top: 1px; }
-  .header-actions { display: flex; align-items: center; gap: 10px; }
-  .btn { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: var(--radius); cursor: pointer; border: 1px solid transparent; transition: all 0.15s; white-space: nowrap; }
-  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .btn-primary:hover { background: #0048b8; }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-ghost { background: var(--surface); color: var(--text-2); border-color: var(--border-strong); }
-  .btn-ghost:hover { background: var(--surface2); }
-  .setup-banner { background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .setup-banner.hidden { display: none; }
-  .setup-icon { width: 36px; height: 36px; background: var(--amber-l); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .setup-icon svg { width: 18px; height: 18px; stroke: var(--amber); fill: none; stroke-width: 2; stroke-linecap: round; }
-  .setup-text { flex: 1; min-width: 200px; }
-  .setup-text strong { display: block; font-size: 13px; font-weight: 600; margin-bottom: 2px; }
-  .setup-text span { font-size: 12px; color: var(--text-2); }
-  .setup-input-row { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
-  .setup-input { font-family: 'DM Mono', monospace; font-size: 12px; padding: 8px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--bg); color: var(--text); width: 340px; max-width: 100%; outline: none; }
-  .status-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-2); font-family: 'DM Mono', monospace; }
-  .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-  .dot-green { background: #22c55e; } .dot-amber { background: #f59e0b; animation: pulse 1.5s infinite; } .dot-gray { background: #9ca3af; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-  .status-bar .timestamp { margin-left: auto; color: var(--text-3); }
-  .nav { display: flex; gap: 4px; margin-bottom: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 4px; flex-wrap: wrap; }
-  .nav-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 7px 14px; border-radius: 8px; cursor: pointer; border: none; background: transparent; color: var(--text-2); transition: all 0.12s; white-space: nowrap; }
-  .nav-btn:hover { background: var(--surface2); color: var(--text); }
-  .nav-btn.active { background: var(--accent); color: #fff; }
-  .panel { display: none; } .panel.active { display: block; }
-  .skeleton { background: linear-gradient(90deg, var(--surface2) 25%, var(--surface) 50%, var(--surface2) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--radius); }
-  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 10px; box-shadow: var(--shadow); }
-  .card:last-child { margin-bottom: 0; }
-  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 18px; }
-  .metric { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; box-shadow: var(--shadow); }
-  .metric-label { font-size: 11px; font-weight: 500; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-  .metric-val { font-size: 22px; font-weight: 600; color: var(--text); letter-spacing: -0.5px; line-height: 1.1; }
-  .metric-sub { font-size: 11px; color: var(--text-3); margin-top: 3px; }
-  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 99px; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; }
-  .b-blue { background: var(--blue-l); color: var(--blue-t); }
-  .b-teal { background: var(--teal-l); color: var(--teal-t); }
-  .b-amber { background: var(--amber-l); color: var(--amber-t); }
-  .b-red { background: var(--red-l); color: var(--red-t); }
-  .b-purple { background: var(--purple-l); color: var(--purple-t); }
-  .b-gray { background: var(--gray-l); color: var(--gray-t); }
-  .news-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; line-height: 1.4; }
-  .news-meta { font-size: 11px; color: var(--text-3); font-family: 'DM Mono', monospace; margin-bottom: 8px; }
-  .news-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; }
-  .section-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; margin-top: 20px; }
-  .section-label:first-child { margin-top: 0; }
-  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
-  .product-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; box-shadow: var(--shadow); }
-  .product-name { font-size: 13px; font-weight: 600; color: var(--text); margin-top: 4px; margin-bottom: 2px; }
-  .product-cat { font-size: 11px; color: var(--text-3); margin-bottom: 8px; }
-  .product-update { font-size: 12px; color: var(--text-2); line-height: 1.55; }
-  .exec-row { display: flex; align-items: flex-start; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); }
-  .exec-row:last-child { border-bottom: none; padding-bottom: 0; }
-  .exec-row:first-child { padding-top: 0; }
-  .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; font-family: 'DM Mono', monospace; }
-  .av-blue { background: var(--blue-l); color: var(--blue-t); }
-  .av-teal { background: var(--teal-l); color: var(--teal-t); }
-  .av-purple { background: var(--purple-l); color: var(--purple-t); }
-  .av-amber { background: var(--amber-l); color: var(--amber-t); }
-  .av-red { background: var(--red-l); color: var(--red-t); }
-  .exec-name { font-size: 13px; font-weight: 600; color: var(--text); }
-  .exec-role { font-size: 11px; color: var(--text-3); margin-bottom: 5px; font-family: 'DM Mono', monospace; }
-  .exec-note { font-size: 12px; color: var(--text-2); line-height: 1.6; }
-  .event-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
-  .event-row:last-child { border-bottom: none; padding-bottom: 0; }
-  .event-row:first-child { padding-top: 0; }
-  .event-date-block { min-width: 52px; text-align: center; background: var(--surface2); border-radius: var(--radius); padding: 8px 6px; }
-  .event-month { font-size: 9px; font-weight: 600; text-transform: uppercase; color: var(--text-3); letter-spacing: 0.08em; }
-  .event-day { font-size: 20px; font-weight: 700; color: var(--text); line-height: 1.1; letter-spacing: -0.5px; }
-  .event-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-  .event-desc { font-size: 12px; color: var(--text-2); line-height: 1.6; }
-  .theme-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 10px; box-shadow: var(--shadow); }
-  .theme-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 8px; flex-wrap: wrap; }
-  .theme-name { font-size: 13px; font-weight: 600; color: var(--text); }
-  .signal-bar { height: 5px; border-radius: 99px; background: var(--surface2); margin-bottom: 8px; overflow: hidden; }
-  .signal-fill { height: 100%; border-radius: 99px; transition: width 0.8s ease; }
-  .theme-desc { font-size: 12px; color: var(--text-2); line-height: 1.6; }
-  .risk-list { padding: 0; }
-  .risk-row { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text-2); line-height: 1.5; }
-  .risk-row:last-child { border-bottom: none; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
-  .dot-red { background: #ef4444; } .dot-amber { background: #f59e0b; } .dot-green { background: #22c55e; }
-  .content-area { min-height: 300px; }
-  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; gap: 12px; color: var(--text-3); text-align: center; }
-  .empty-state p { font-size: 13px; max-width: 260px; line-height: 1.6; }
-  .panel-inner { animation: fadeIn 0.25s ease; }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
-  .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-3); font-family: 'DM Mono', monospace; flex-wrap: wrap; gap: 8px; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f5f4f0;--surface:#fff;--surface2:#f0eeea;--border:rgba(0,0,0,.08);--border-strong:rgba(0,0,0,.14);--text:#111110;--text2:#555450;--text3:#999894;--accent:#0057d9;--bl:#e8f0fd;--bt:#003799;--tl:#e3f5ee;--tt:#095c44;--al:#fef3c7;--at:#7c3a05;--rl:#fde8e6;--rt:#8b1a12;--pl:#f0ebff;--pt:#4c2490;--gl:#f0eeea;--gt:#44433f;--r:10px;--rl2:14px;--sh:0 1px 3px rgba(0,0,0,.06)}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6}
+.shell{max-width:960px;margin:0 auto;padding:32px 24px 80px}
+.header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:16px;flex-wrap:wrap}
+.hl{display:flex;align-items:center;gap:14px}
+.logo{width:36px;height:36px;display:grid;grid-template-columns:1fr 1fr;gap:3px;flex-shrink:0}
+.logo div{border-radius:2px}
+.q1{background:#f25022}.q2{background:#7fba00}.q3{background:#00a4ef}.q4{background:#ffb900}
+.htitle{font-size:20px;font-weight:600;letter-spacing:-.3px;color:var(--text)}
+.hsub{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:1px}
+.hactions{display:flex;align-items:center;gap:10px}
+.btn{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:8px 16px;border-radius:var(--r);cursor:pointer;border:1px solid transparent;transition:all .15s;white-space:nowrap}
+.btn-p{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-p:hover{background:#0048b8}
+.btn-p:disabled{opacity:.5;cursor:not-allowed}
+.btn-g{background:var(--surface);color:var(--text2);border-color:var(--border-strong)}
+.btn-g:hover{background:var(--surface2)}
+.setup{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--rl2);padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.setup.hidden{display:none}
+.sicon{width:36px;height:36px;background:var(--al);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sicon svg{width:18px;height:18px;stroke:#b45309;fill:none;stroke-width:2;stroke-linecap:round}
+.stext{flex:1;min-width:200px}
+.stext strong{display:block;font-size:13px;font-weight:600;margin-bottom:2px}
+.stext span{font-size:12px;color:var(--text2)}
+.sinrow{display:flex;gap:8px;align-items:center;margin-top:10px}
+.sinput{font-family:'DM Mono',monospace;font-size:12px;padding:8px 12px;border:1px solid var(--border-strong);border-radius:var(--r);background:var(--bg);color:var(--text);width:340px;max-width:100%;outline:none}
+.sinput:focus{border-color:var(--accent)}
+.sbar{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text2);font-family:'DM Mono',monospace}
+.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dg{background:#9ca3af}.da{background:#f59e0b;animation:pulse 1.5s infinite}.dGr{background:#22c55e}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sts{margin-left:auto;color:var(--text3)}
+.nav{display:flex;gap:4px;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:4px;flex-wrap:wrap}
+.nb{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:7px 14px;border-radius:8px;cursor:pointer;border:none;background:transparent;color:var(--text2);transition:all .12s;white-space:nowrap}
+.nb:hover{background:var(--surface2);color:var(--text)}
+.nb.active{background:var(--accent);color:#fff}
+.panel{display:none}.panel.active{display:block}
+.sk{background:linear-gradient(90deg,var(--surface2) 25%,var(--surface) 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--r);margin-bottom:10px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:16px 20px;margin-bottom:10px;box-shadow:var(--sh)}
+.card:last-child{margin-bottom:0}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px}
+.met{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:14px 16px;box-shadow:var(--sh)}
+.ml{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.mv{font-size:22px;font-weight:600;color:var(--text);letter-spacing:-.5px;line-height:1.1}
+.ms{font-size:11px;color:var(--text3);margin-top:3px}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px}
+.b-blue{background:var(--bl);color:var(--bt)}.b-teal{background:var(--tl);color:var(--tt)}.b-amber{background:var(--al);color:var(--at)}.b-red{background:var(--rl);color:var(--rt)}.b-purple{background:var(--pl);color:var(--pt)}.b-gray{background:var(--gl);color:var(--gt)}
+.nt{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.4}
+.nm{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:8px}
+.nd{font-size:13px;color:var(--text2);line-height:1.6}
+.slabel{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;margin-top:20px}
+.slabel:first-child{margin-top:0}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.pc{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:14px 16px;box-shadow:var(--sh)}
+.pn{font-size:13px;font-weight:600;color:var(--text);margin-top:4px;margin-bottom:2px}
+.pcat{font-size:11px;color:var(--text3);margin-bottom:8px}
+.pu{font-size:12px;color:var(--text2);line-height:1.55}
+.erow{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
+.erow:last-child{border-bottom:none;padding-bottom:0}
+.erow:first-child{padding-top:0}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;font-family:'DM Mono',monospace}
+.av-blue{background:var(--bl);color:var(--bt)}.av-teal{background:var(--tl);color:var(--tt)}.av-purple{background:var(--pl);color:var(--pt)}.av-amber{background:var(--al);color:var(--at)}.av-red{background:var(--rl);color:var(--rt)}
+.en{font-size:13px;font-weight:600;color:var(--text)}
+.er{font-size:11px;color:var(--text3);margin-bottom:5px;font-family:'DM Mono',monospace}
+.en2{font-size:12px;color:var(--text2);line-height:1.6}
+.evrow{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)}
+.evrow:last-child{border-bottom:none;padding-bottom:0}
+.evrow:first-child{padding-top:0}
+.edb{min-width:52px;text-align:center;background:var(--surface2);border-radius:var(--r);padding:8px 6px}
+.edm{font-size:9px;font-weight:600;text-transform:uppercase;color:var(--text3);letter-spacing:.08em}
+.edd{font-size:20px;font-weight:700;color:var(--text);line-height:1.1;letter-spacing:-.5px}
+.evn{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.evd{font-size:12px;color:var(--text2);line-height:1.6}
+.tc{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:16px 20px;margin-bottom:10px;box-shadow:var(--sh)}
+.th2{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap}
+.tn{font-size:13px;font-weight:600;color:var(--text)}
+.sigbar{height:5px;border-radius:99px;background:var(--surface2);margin-bottom:8px;overflow:hidden}
+.sigfill{height:100%;border-radius:99px;transition:width .8s ease}
+.td{font-size:12px;color:var(--text2);line-height:1.6}
+.rlist{padding:0}
+.rrow{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2);line-height:1.5}
+.rrow:last-child{border-bottom:none}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.dot-red{background:#ef4444}.dot-amber{background:#f59e0b}.dot-green{background:#22c55e}
+.ca{min-height:300px}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:280px;gap:12px;color:var(--text3);text-align:center}
+.empty p{font-size:13px;max-width:260px;line-height:1.6}
+.pi{animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;flex-wrap:wrap;gap:8px}
 </style>
 </head>
 <body>
 <div class="shell">
   <div class="header">
-    <div class="header-left">
-      <div class="ms-logo">
-        <div class="q1"></div><div class="q2"></div>
-        <div class="q3"></div><div class="q4"></div>
-      </div>
-      <div>
-        <div class="header-title">Microsoft Intelligence Hub</div>
-        <div class="header-sub">Sprinklr Account Dashboard</div>
-      </div>
+    <div class="hl">
+      <div class="logo"><div class="q1"></div><div class="q2"></div><div class="q3"></div><div class="q4"></div></div>
+      <div><div class="htitle">Microsoft Intelligence Hub</div><div class="hsub">Sprinklr Account Dashboard</div></div>
     </div>
-    <div class="header-actions">
-      <button class="btn btn-ghost" onclick="clearData()">Clear data</button>
-      <button class="btn btn-primary" id="refreshBtn" onclick="refreshAll()">Refresh intel</button>
+    <div class="hactions">
+      <button class="btn btn-g" onclick="clearData()">Clear data</button>
+      <button class="btn btn-p" id="refreshBtn" onclick="refreshAll()">Refresh intel</button>
     </div>
   </div>
-  <div class="setup-banner" id="setupBanner">
-    <div class="setup-icon">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    </div>
-    <div class="setup-text">
+  <div class="setup" id="setupBanner">
+    <div class="sicon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+    <div class="stext">
       <strong>Add your Anthropic API key to enable live refresh</strong>
       <span>Stored locally in your browser only — never sent anywhere except Anthropic's API.</span>
-      <div class="setup-input-row">
-        <input class="setup-input" type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." />
-        <button class="btn btn-primary" onclick="saveKey()">Save key</button>
+      <div class="sinrow">
+        <input class="sinput" type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." />
+        <button class="btn btn-p" id="saveBtn" onclick="saveKey()">Save key</button>
       </div>
     </div>
   </div>
-  <div class="status-bar">
-    <div class="status-dot dot-gray" id="statusDot"></div>
+  <div class="sbar">
+    <div class="sdot dg" id="statusDot"></div>
     <span id="statusText">Ready — hit "Refresh intel" to pull live Microsoft data</span>
-    <span class="timestamp" id="timestamp"></span>
+    <span class="sts" id="timestamp"></span>
   </div>
   <div class="nav">
-    <button class="nav-btn active" onclick="showPanel('news',this)">News & events</button>
-    <button class="nav-btn" onclick="showPanel('products',this)">Product universe</button>
-    <button class="nav-btn" onclick="showPanel('execs',this)">Executives</button>
-    <button class="nav-btn" onclick="showPanel('calendar',this)">Content calendar</button>
-    <button class="nav-btn" onclick="showPanel('social',this)">Social presence</button>
+    <button class="nb active" onclick="showPanel('news',this)">News & events</button>
+    <button class="nb" onclick="showPanel('products',this)">Product universe</button>
+    <button class="nb" onclick="showPanel('execs',this)">Executives</button>
+    <button class="nb" onclick="showPanel('calendar',this)">Content calendar</button>
+    <button class="nb" onclick="showPanel('social',this)">Social presence</button>
   </div>
-  <div class="content-area">
-    <div class="panel active" id="panel-news"><div id="news-content"><div class="empty-state"><p>Hit "Refresh intel" to pull the latest Microsoft news, earnings, and announcements.</p></div></div></div>
-    <div class="panel" id="panel-products"><div id="products-content"><div class="empty-state"><p>Refresh to load the full Microsoft product universe with current status updates.</p></div></div></div>
-    <div class="panel" id="panel-execs"><div id="execs-content"><div class="empty-state"><p>Refresh to load Microsoft executive profiles and recent communication signals.</p></div></div></div>
-    <div class="panel" id="panel-calendar"><div id="calendar-content"><div class="empty-state"><p>Refresh to load upcoming Microsoft events, earnings dates, and content planning opportunities.</p></div></div></div>
-    <div class="panel" id="panel-social"><div id="social-content"><div class="empty-state"><p>Refresh to load Microsoft's social presence analysis, content themes, and risk signals.</p></div></div></div>
+  <div class="ca">
+    <div class="panel active" id="panel-news"><div id="news-content"><div class="empty"><p>Hit "Refresh intel" to pull the latest Microsoft news and announcements.</p></div></div></div>
+    <div class="panel" id="panel-products"><div id="products-content"><div class="empty"><p>Refresh to load the Microsoft product universe.</p></div></div></div>
+    <div class="panel" id="panel-execs"><div id="execs-content"><div class="empty"><p>Refresh to load executive profiles and communication signals.</p></div></div></div>
+    <div class="panel" id="panel-calendar"><div id="calendar-content"><div class="empty"><p>Refresh to load upcoming events and content opportunities.</p></div></div></div>
+    <div class="panel" id="panel-social"><div id="social-content"><div class="empty"><p>Refresh to load social themes and risk signals.</p></div></div></div>
   </div>
-  <div class="footer">
-    <span>Microsoft Intelligence Hub · Sprinklr</span>
-    <span id="footer-ts">Not yet refreshed</span>
-  </div>
+  <div class="footer"><span>Microsoft Intelligence Hub · Sprinklr</span><span id="footer-ts">Not yet refreshed</span></div>
 </div>
 <script>
-let apiKey = localStorage.getItem('msft_hub_apikey') || '';
-let lastRefresh = localStorage.getItem('msft_hub_lastrefresh') || '';
-let cachedData = JSON.parse(localStorage.getItem('msft_hub_data') || '{}');
-document.addEventListener('DOMContentLoaded', () => {
-  if (apiKey) { document.getElementById('setupBanner').classList.add('hidden'); document.getElementById('apiKeyInput').value = apiKey; }
-  if (lastRefresh) { setStatus('ready','Last refreshed '+lastRefresh); document.getElementById('footer-ts').textContent='Last refreshed '+lastRefresh; }
-  if (cachedData && Object.keys(cachedData).length > 0) renderAll(cachedData);
-});
-function saveKey() {
-  const val = document.getElementById('apiKeyInput').value.trim();
-  if (!val.startsWith('sk-ant')) { alert('Please enter a valid Anthropic API key (starts with sk-ant)'); return; }
-  apiKey = val; localStorage.setItem('msft_hub_apikey', apiKey);
+var apiKey=localStorage.getItem('msft_apikey')||'';
+var cachedData=JSON.parse(localStorage.getItem('msft_data')||'{}');
+var lastRefresh=localStorage.getItem('msft_lastrefresh')||'';
+
+window.onload=function(){
+  if(apiKey){document.getElementById('setupBanner').classList.add('hidden');document.getElementById('apiKeyInput').value=apiKey;}
+  if(lastRefresh){setStatus('ready','Last refreshed '+lastRefresh);document.getElementById('footer-ts').textContent='Last refreshed '+lastRefresh;}
+  if(cachedData&&Object.keys(cachedData).length>0)renderAll(cachedData);
+};
+
+function saveKey(){
+  var val=document.getElementById('apiKeyInput').value.trim();
+  if(!val){alert('Please paste your API key');return;}
+  apiKey=val;
+  localStorage.setItem('msft_apikey',apiKey);
   document.getElementById('setupBanner').classList.add('hidden');
   setStatus('ready','API key saved — ready to refresh');
 }
-function clearData() {
-  if (!confirm('Clear all cached data and reset the dashboard?')) return;
-  localStorage.removeItem('msft_hub_data'); localStorage.removeItem('msft_hub_lastrefresh');
-  cachedData = {}; lastRefresh = '';
-  ['news','products','execs','calendar','social'].forEach(p => { document.getElementById(p+'-content').innerHTML='<div class="empty-state"><p>Cleared. Hit Refresh to reload.</p></div>'; });
-  setStatus('gray','Data cleared'); document.getElementById('footer-ts').textContent='Not yet refreshed';
+
+function clearData(){
+  if(!confirm('Clear all data and reset?'))return;
+  localStorage.removeItem('msft_data');localStorage.removeItem('msft_lastrefresh');
+  cachedData={};lastRefresh='';
+  ['news','products','execs','calendar','social'].forEach(function(p){document.getElementById(p+'-content').innerHTML='<div class="empty"><p>Cleared. Hit Refresh to reload.</p></div>';});
+  setStatus('gray','Cleared');document.getElementById('footer-ts').textContent='Not yet refreshed';
 }
-function setStatus(type,msg) {
-  const dot = document.getElementById('statusDot'); dot.className='status-dot';
-  if(type==='loading') dot.classList.add('dot-amber');
-  else if(type==='ready') dot.classList.add('dot-green');
-  else dot.classList.add('dot-gray');
+
+function setStatus(type,msg){
+  var dot=document.getElementById('statusDot');
+  dot.className='sdot';
+  if(type==='loading')dot.classList.add('da');
+  else if(type==='ready')dot.classList.add('dGr');
+  else dot.classList.add('dg');
   document.getElementById('statusText').textContent=msg;
 }
-function showPanel(id,btn) {
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active'); btn.classList.add('active');
+
+function showPanel(id,btn){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
 }
-function showSkeletons() {
-  const sk=(h)=>`<div class="skeleton" style="height:${h}px;margin-bottom:10px;"></div>`;
-  ['news','products','execs','calendar','social'].forEach(p=>{ document.getElementById(p+'-content').innerHTML=sk(80)+sk(100)+sk(90)+sk(110)+sk(80); });
+
+function showSkeletons(){
+  ['news','products','execs','calendar','social'].forEach(function(p){
+    document.getElementById(p+'-content').innerHTML='<div class="sk" style="height:80px"></div><div class="sk" style="height:100px"></div><div class="sk" style="height:90px"></div><div class="sk" style="height:110px"></div>';
+  });
 }
-async function refreshAll() {
-  if (!apiKey) { document.getElementById('setupBanner').classList.remove('hidden'); document.getElementById('apiKeyInput').focus(); return; }
-  const btn=document.getElementById('refreshBtn'); btn.disabled=true; btn.textContent='Refreshing...';
-  setStatus('loading','Fetching live Microsoft intelligence...'); showSkeletons();
-  const today=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  const prompt=`Today is ${today}. You are a Microsoft intelligence analyst for a Sprinklr social media account manager. Return a single valid JSON object (no markdown, no expla
+
+async function refreshAll(){
+  if(!apiKey){document.getElementById('setupBanner').classList.remove('hidden');document.getElementById('apiKeyInput').focus();return;}
+  var btn=document.getElementById('refreshBtn');
+  btn.disabled=true;btn.textContent='Refreshing...';
+  setStatus('loading','Fetching live Microsoft intelligence...');
+  showSkeletons();
+  var today=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  var prompt='Today is '+today+'. You are a Microsoft intelligence analyst for a Sprinklr social media account manager. Return ONLY a raw JSON object with no markdown, no explanation, no code fences. The JSON must have exactly these keys: {"news":[{"badge":"text","badgeColor":"blue|teal|amber|red|purple|gray","title":"text","meta":"text","desc":"text"}],"metrics":[{"label":"text","val":"text","sub":"text"}],"products":[{"badge":"text","badgeColor":"blue|teal|amber|purple|gray|red","name":"text","cat":"text","update":"text"}],"execs":[{"initials":"2 letters","avatarColor":"blue|teal|purple|amber|red","name":"text","role":"text","note":"text"}],"calendar":[{"month":"3-letter","day":"text","badge":"text","badgeColor":"blue|teal|amber|purple|gray","name":"text","desc":"text"}],"social":{"themes":[{"name":"text","badge":"text","badgeColor":"blue|teal|amber|purple|gray","signalPct":85,"signalColor":"#hex","desc":"text"}],"risks":[{"level":"red|amber|green","text":"text"}]}}. Include: 5 news items, 4 metrics, 9 products, 5 execs, 5 calendar events, 4 themes, 6 risks. Be specific and current for Microsoft social content strategy.';
+  try{
+    var response=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,messages:[{role:'user',content:prompt}]})
+    });
+    if(!response.ok){var err=await response.json();throw new Error(err.error&&err.error.message?err.error.message:'API error '+response.status);}
+    var data=await response.json();
+    var raw=data.content[0].text.trim().replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
+    var parsed=JSON.parse(raw);
+    cachedData=parsed;
+    var ts=new Date().toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+    lastRefresh=ts;
+    localStorage.setItem('msft_data',JSON.stringify(parsed));
+    localStorage.setItem('msft_lastrefresh',ts);
+    renderAll(parsed);
+    setStatus('ready','Live data loaded — '+ts);
+    document.getElementById('footer-ts').textContent='Last refreshed '+ts;
+    document.getElementById('timestamp').textContent=ts;
+  }catch(e){
+    setStatus('gray','Error: '+e.message);
+    if(cachedData&&Object.keys(cachedData).length>0)renderAll(cachedData);
+    else['news','products','execs','calendar','social'].forEach(function(p){document.getElementById(p+'-content').innerHTML='<div class="empty"><p style="color:#c0392b">Error: '+e.message+'</p></div>';});
+  }finally{
+    btn.disabled=false;btn.textContent='Refresh intel';
+  }
+}
+
+function renderAll(d){
+  if(d.news)renderNews(d.news,d.metrics);
+  if(d.products)renderProducts(d.products);
+  if(d.execs)renderExecs(d.execs);
+  if(d.calendar)renderCalendar(d.calendar);
+  if(d.social)renderSocial(d.social);
+}
+
+function renderNews(news,metrics){
+  var h='<div class="pi">';
+  if(metrics&&metrics.length){h+='<div class="metrics">';metrics.forEach(function(m){h+='<div class="met"><div class="ml">'+m.label+'</div><div class="mv">'+m.val+'</div><div class="ms">'+m.sub+'</div></div>';});h+='</div>';}
+  h+='<div class="slabel">Latest intelligence</div>';
+  news.forEach(function(n){h+='<div class="card"><span class="badge b-'+n.badgeColor+'">'+n.badge+'</span><div class="nt">'+n.title+'</div><div class="nm">'+n.meta+'</div><div class="nd">'+n.desc+'</div></div>';});
+  h+='</div>';document.getElementById('news-content').innerHTML=h;
+}
+
+function renderProducts(products){
+  var h='<div class="pi"><div class="slabel">Core product lines</div><div class="pgrid">';
+  products.forEach(function(p){h+='<div class="pc"><span class="badge b-'+p.badgeColor+'">'+p.badge+'</span><div class="pn">'+p.name+'</div><div class="pcat">'+p.cat+'</div><div class="pu">'+p.update+'</div></div>';});
+  h+='</div></div>';document.getElementById('products-content').innerHTML=h;
+}
+
+function renderExecs(execs){
+  var h='<div class="pi"><div class="card">';
+  execs.forEach(function(e){h+='<div class="erow"><div class="av av-'+e.avatarColor+'">'+e.initials+'</div><div><div class="en">'+e.name+'</div><div class="er">'+e.role+'</div><div class="en2">'+e.note+'</div></div></div>';});
+  h+='</div></div>';document.getElementById('execs-content').innerHTML=h;
+}
+
+function renderCalendar(events){
+  var h='<div class="pi"><div class="slabel">Upcoming moments to plan around</div><div class="card">';
+  events.forEach(function(e){h+='<div class="evrow"><div class="edb"><div class="edm">'+e.month+'</div><div class="edd">'+e.day+'</div></div><div><span class="badge b-'+e.badgeColor+'">'+e.badge+'</span><div class="evn">'+e.name+'</div><div class="evd">'+e.desc+'</div></div></div>';});
+  h+='</div></div>';document.getElementById('calendar-content').innerHTML=h;
+}
+
+function renderSocial(social){
+  var h='<div class="pi"><div class="slabel">Microsoft\'s dominant content themes</div>';
+  (social.themes||[]).forEach(function(t){h+='<div class="tc"><div class="th2"><div class="tn">'+t.name+'</div><span class="badge b-'+t.badgeColor+'">'+t.badge+'</span></div><div class="sigbar"><div class="sigfill" style="width:'+t.signalPct+'%;background:'+t.signalColor+';"></div></div><div class="td">'+t.desc+'</div></div>';});
+  h+='<div class="slabel" style="margin-top:20px">Risk & opportunity signals</div><div class="card"><div class="rlist">';
+  (social.risks||[]).forEach(function(r){h+='<div class="rrow"><div class="dot dot-'+r.level+'"></div>'+r.text+'</div>';});
+  h+='</div></div></div>';document.getElementById('social-content').innerHTML=h;
+}
+</script>
+</body>
+</html>
