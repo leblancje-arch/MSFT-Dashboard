@@ -65,14 +65,32 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .pn{font-size:13px;font-weight:600;color:var(--text);margin-top:4px;margin-bottom:2px}
 .pcat{font-size:11px;color:var(--text3);margin-bottom:8px}
 .pu{font-size:12px;color:var(--text2);line-height:1.55}
-.erow{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
-.erow:last-child{border-bottom:none;padding-bottom:0}
-.erow:first-child{padding-top:0}
-.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;font-family:'DM Mono',monospace}
+
+/* Executive cards */
+.exec-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);margin-bottom:16px;box-shadow:var(--sh);overflow:hidden}
+.exec-header{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border)}
+.av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;font-family:'DM Mono',monospace}
 .av-blue{background:var(--bl);color:var(--bt)}.av-teal{background:var(--tl);color:var(--tt)}.av-purple{background:var(--pl);color:var(--pt)}.av-amber{background:var(--al);color:var(--at)}.av-red{background:var(--rl);color:var(--rt)}
-.en{font-size:13px;font-weight:600;color:var(--text)}
-.er{font-size:11px;color:var(--text3);margin-bottom:5px;font-family:'DM Mono',monospace}
+.exec-info{flex:1}
+.en{font-size:14px;font-weight:600;color:var(--text)}
+.er{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:4px}
 .en2{font-size:12px;color:var(--text2);line-height:1.6}
+.exec-focus{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;margin-top:6px;background:var(--bl);color:var(--bt)}
+.exec-activity{padding:16px 20px}
+.activity-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.activity-item{padding:10px 0;border-bottom:1px solid var(--border)}
+.activity-item:last-child{border-bottom:none;padding-bottom:0}
+.activity-item:first-child{padding-top:0}
+.ai-type{display:inline-block;font-size:10px;font-weight:600;padding:1px 7px;border-radius:99px;margin-bottom:4px}
+.at-li{background:#e8f0fd;color:#003799}
+.at-blog{background:#e3f5ee;color:#085041}
+.at-video{background:#fde8e6;color:#791f1f}
+.at-event{background:#f0ebff;color:#3c3489}
+.at-news{background:#fef3c7;color:#7c3a05}
+.ai-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px;line-height:1.4}
+.ai-summary{font-size:12px;color:var(--text2);line-height:1.55}
+.ai-meta{font-size:11px;color:var(--text3);margin-top:3px;font-family:'DM Mono',monospace}
+
 .evrow{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)}
 .evrow:last-child{border-bottom:none;padding-bottom:0}
 .evrow:first-child{padding-top:0}
@@ -131,14 +149,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="nav">
     <button class="nb active" onclick="showPanel('news',this)">News & events</button>
     <button class="nb" onclick="showPanel('products',this)">Product universe</button>
-    <button class="nb" onclick="showPanel('execs',this)">Executives</button>
+    <button class="nb" onclick="showPanel('execs',this)">Marketing execs</button>
     <button class="nb" onclick="showPanel('calendar',this)">Content calendar</button>
     <button class="nb" onclick="showPanel('social',this)">Social presence</button>
   </div>
   <div class="ca">
     <div class="panel active" id="panel-news"><div id="news-content"><div class="empty"><p>Hit "Refresh intel" to pull the latest Microsoft news and announcements.</p></div></div></div>
     <div class="panel" id="panel-products"><div id="products-content"><div class="empty"><p>Refresh to load the Microsoft product universe.</p></div></div></div>
-    <div class="panel" id="panel-execs"><div id="execs-content"><div class="empty"><p>Refresh to load executive profiles and communication signals.</p></div></div></div>
+    <div class="panel" id="panel-execs"><div id="execs-content"><div class="empty"><p>Refresh to load marketing executive profiles and their latest public activity.</p></div></div></div>
     <div class="panel" id="panel-calendar"><div id="calendar-content"><div class="empty"><p>Refresh to load upcoming events and content opportunities.</p></div></div></div>
     <div class="panel" id="panel-social"><div id="social-content"><div class="empty"><p>Refresh to load social themes and risk signals.</p></div></div></div>
   </div>
@@ -190,7 +208,7 @@ function showPanel(id,btn){
 
 function showSkeletons(){
   ['news','products','execs','calendar','social'].forEach(function(p){
-    document.getElementById(p+'-content').innerHTML='<div class="sk" style="height:80px"></div><div class="sk" style="height:100px"></div><div class="sk" style="height:90px"></div><div class="sk" style="height:110px"></div>';
+    document.getElementById(p+'-content').innerHTML='<div class="sk" style="height:80px"></div><div class="sk" style="height:120px"></div><div class="sk" style="height:100px"></div><div class="sk" style="height:140px"></div>';
   });
 }
 
@@ -201,7 +219,9 @@ async function refreshAll(){
   setStatus('loading','Fetching live Microsoft intelligence...');
   showSkeletons();
   var today=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  var prompt='Today is '+today+'. You are a Microsoft intelligence analyst for a Sprinklr social media account manager. Return ONLY a raw JSON object with no markdown, no explanation, no code fences. The JSON must have exactly these keys: {"news":[{"badge":"text","badgeColor":"blue|teal|amber|red|purple|gray","title":"text","meta":"text","desc":"text"}],"metrics":[{"label":"text","val":"text","sub":"text"}],"products":[{"badge":"text","badgeColor":"blue|teal|amber|purple|gray|red","name":"text","cat":"text","update":"text"}],"execs":[{"initials":"2 letters","avatarColor":"blue|teal|purple|amber|red","name":"text","role":"text","note":"text"}],"calendar":[{"month":"3-letter","day":"text","badge":"text","badgeColor":"blue|teal|amber|purple|gray","name":"text","desc":"text"}],"social":{"themes":[{"name":"text","badge":"text","badgeColor":"blue|teal|amber|purple|gray","signalPct":85,"signalColor":"#hex","desc":"text"}],"risks":[{"level":"red|amber|green","text":"text"}]}}. Include: 5 news items, 4 metrics, 9 products, 5 execs, 5 calendar events, 4 themes, 6 risks. Be specific and current for Microsoft social content strategy.';
+
+  var prompt='Today is '+today+'. You are a Microsoft intelligence analyst for a Sprinklr strategic account executive who manages the Microsoft account exclusively. Return ONLY a raw JSON object with no markdown, no explanation, no code fences. The JSON must have exactly these keys:\n\n{"news":[{"badge":"text","badgeColor":"blue|teal|amber|red|purple|gray","title":"text","meta":"text","desc":"text"}],"metrics":[{"label":"text","val":"text","sub":"text"}],"products":[{"badge":"text","badgeColor":"blue|teal|amber|purple|gray|red","name":"text","cat":"text","update":"text"}],"execs":[{"initials":"2 letters","avatarColor":"blue|teal|purple|amber|red","name":"text","role":"text","focus":"text - their Sprinklr relevance in 8 words or less","bio":"text - 2 sentences on their role and communication style","recentActivity":[{"type":"LinkedIn|Blog|Video|Event|News","title":"text","summary":"text","date":"text"}]}],"calendar":[{"month":"3-letter","day":"text","badge":"text","badgeColor":"blue|teal|amber|purple|gray","name":"text","desc":"text"}],"social":{"themes":[{"name":"text","badge":"text","badgeColor":"blue|teal|amber|purple|gray","signalPct":85,"signalColor":"#hex","desc":"text"}],"risks":[{"level":"red|amber|green","text":"text"}]}}\n\nFor the execs array, include EXACTLY these 5 Microsoft marketing executives in this order:\n1. Takeshi Numoto - EVP & CMO\n2. Yusuf Mehdi - EVP Consumer CMO\n3. Bill Hamilton - VP Head of Marketing Technology and Worldwide Marketing Operations\n4. Bryson Gordon - CVP Global Marketing / Media Partnerships and Agencies\n5. Nanda Ramachandran - CMO Windows & Devices\n\nFor each exec, provide 3 recentActivity items — their most recent and notable public content including LinkedIn posts, Microsoft blog posts, videos, conference appearances, or press mentions. Be specific with real titles and dates where known.\n\nAlso include: 5 news items, 4 metrics, 9 products, 5 calendar events, 4 themes, 6 risks.';
+
   try{
     var response=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
@@ -211,7 +231,7 @@ async function refreshAll(){
         'anthropic-version':'2023-06-01',
         'anthropic-dangerous-direct-browser-access':'true'
       },
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,messages:[{role:'user',content:prompt}]})
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:5000,messages:[{role:'user',content:prompt}]})
     });
     if(!response.ok){var err=await response.json();throw new Error(err.error&&err.error.message?err.error.message:'API error '+response.status);}
     var data=await response.json();
@@ -258,9 +278,36 @@ function renderProducts(products){
 }
 
 function renderExecs(execs){
-  var h='<div class="pi"><div class="card">';
-  execs.forEach(function(e){h+='<div class="erow"><div class="av av-'+e.avatarColor+'">'+e.initials+'</div><div><div class="en">'+e.name+'</div><div class="er">'+e.role+'</div><div class="en2">'+e.note+'</div></div></div>';});
-  h+='</div></div>';document.getElementById('execs-content').innerHTML=h;
+  var typeClass={'LinkedIn':'at-li','Blog':'at-blog','Video':'at-video','Event':'at-event','News':'at-news'};
+  var h='<div class="pi"><div class="slabel">Microsoft marketing leadership — recent public activity</div>';
+  execs.forEach(function(e){
+    h+='<div class="exec-card">';
+    h+='<div class="exec-header">';
+    h+='<div class="av av-'+e.avatarColor+'">'+e.initials+'</div>';
+    h+='<div class="exec-info">';
+    h+='<div class="en">'+e.name+'</div>';
+    h+='<div class="er">'+e.role+'</div>';
+    h+='<div class="en2">'+e.bio+'</div>';
+    h+='<span class="exec-focus">'+e.focus+'</span>';
+    h+='</div></div>';
+    if(e.recentActivity&&e.recentActivity.length){
+      h+='<div class="exec-activity">';
+      h+='<div class="activity-label">Recent public activity</div>';
+      e.recentActivity.forEach(function(a){
+        var tc=typeClass[a.type]||'at-news';
+        h+='<div class="activity-item">';
+        h+='<span class="ai-type '+tc+'">'+a.type+'</span>';
+        h+='<div class="ai-title">'+a.title+'</div>';
+        h+='<div class="ai-summary">'+a.summary+'</div>';
+        h+='<div class="ai-meta">'+a.date+'</div>';
+        h+='</div>';
+      });
+      h+='</div>';
+    }
+    h+='</div>';
+  });
+  h+='</div>';
+  document.getElementById('execs-content').innerHTML=h;
 }
 
 function renderCalendar(events){
