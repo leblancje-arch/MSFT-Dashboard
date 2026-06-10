@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microsoft Contact Tracker — Sprinklr</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f5f4f0;--surface:#fff;--surface2:#f0eeea;--border:rgba(0,0,0,.08);--border-strong:rgba(0,0,0,.14);--text:#111110;--text2:#555450;--text3:#999894;--accent:#0057d9;--bl:#e8f0fd;--bt:#003799;--tl:#e3f5ee;--tt:#095c44;--al:#fef3c7;--at:#7c3a05;--rl:#fde8e6;--rt:#8b1a12;--pl:#f0ebff;--pt:#4c2490;--gl:#f0eeea;--gt:#44433f;--r:10px;--rl2:14px;--sh:0 1px 3px rgba(0,0,0,.06)}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.shell{max-width:880px;margin:0 auto;padding:32px 24px 80px}
+.header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:16px;flex-wrap:wrap}
+.hl{display:flex;align-items:center;gap:14px}
+.logo{width:36px;height:36px;display:grid;grid-template-columns:1fr 1fr;gap:3px;flex-shrink:0}
+.logo div{border-radius:2px}
+.q1{background:#f25022}.q2{background:#7fba00}.q3{background:#00a4ef}.q4{background:#ffb900}
+.htitle{font-size:20px;font-weight:600;letter-spacing:-.3px;color:var(--text)}
+.hsub{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:1px}
+.hactions{display:flex;align-items:center;gap:10px}
+.btn{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:8px 16px;border-radius:var(--r);cursor:pointer;border:1px solid transparent;transition:all .15s;white-space:nowrap}
+.btn-p{background:var(--accent);color:#fff}
+.btn-p:hover{background:#0048b8}
+.btn-p:disabled{opacity:.5;cursor:not-allowed}
+.btn-g{background:var(--surface);color:var(--text2);border-color:var(--border-strong)}
+.btn-g:hover{background:var(--surface2)}
+.setup{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--rl2);padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.setup.hidden{display:none}
+.sicon{width:36px;height:36px;background:var(--al);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sicon svg{width:18px;height:18px;stroke:#b45309;fill:none;stroke-width:2;stroke-linecap:round}
+.stext{flex:1;min-width:200px}
+.stext strong{display:block;font-size:13px;font-weight:600;margin-bottom:2px}
+.stext span{font-size:12px;color:var(--text2)}
+.sinrow{display:flex;gap:8px;align-items:center;margin-top:10px}
+.sinput{font-family:'DM Mono',monospace;font-size:12px;padding:8px 12px;border:1px solid var(--border-strong);border-radius:var(--r);background:var(--bg);color:var(--text);width:340px;max-width:100%;outline:none}
+.sinput:focus{border-color:var(--accent)}
+.sbar{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 16px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text2);font-family:'DM Mono',monospace}
+.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dg{background:#9ca3af}.da{background:#f59e0b;animation:pulse 1.5s infinite}.dGr{background:#22c55e}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sts{margin-left:auto;color:var(--text3)}
+.section-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;margin-top:32px}
+.section-label:first-child{margin-top:0}
+.contact-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);margin-bottom:16px;box-shadow:var(--sh);overflow:hidden}
+.contact-header{display:flex;align-items:flex-start;gap:14px;padding:18px 20px}
+.av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;font-family:'DM Mono',monospace}
+.av-blue{background:var(--bl);color:var(--bt)}.av-teal{background:var(--tl);color:var(--tt)}.av-purple{background:var(--pl);color:var(--pt)}.av-amber{background:var(--al);color:var(--at)}.av-red{background:var(--rl);color:var(--rt)}.av-gray{background:var(--gl);color:var(--gt)}
+.contact-info{flex:1;min-width:0}
+.contact-name{font-size:15px;font-weight:600;color:var(--text);margin-bottom:2px}
+.contact-role{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:6px}
+.contact-bio{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px}
+.contact-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.nav-copy-btn{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;padding:5px 10px;cursor:pointer;background:var(--bl);border:none;border-radius:var(--r);color:var(--bt);font-family:'DM Sans',sans-serif;transition:background .15s}
+.nav-copy-btn:hover{background:#b5d4f4}
+.nav-copy-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.nav-copy-btn.copied{background:var(--tl);color:var(--tt)}
+.feed-area{border-top:1px solid var(--border);padding:14px 20px}
+.feed-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.feed-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
+.expand-btn{font-size:11px;font-weight:500;padding:3px 10px;cursor:pointer;background:transparent;border:0.5px solid var(--border-strong);border-radius:99px;color:var(--text2);font-family:'DM Sans',sans-serif}
+.expand-btn:hover{background:var(--surface2)}
+.activity-item{padding:10px 0;border-bottom:1px solid var(--border)}
+.activity-item:last-child{border-bottom:none;padding-bottom:0}
+.activity-item:first-child{padding-top:0}
+.activity-item.hidden{display:none}
+.ai-top{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap}
+.ai-type{font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;text-transform:uppercase;letter-spacing:.03em}
+.t-blog{background:var(--tl);color:var(--tt)}.t-interview{background:var(--bl);color:var(--bt)}.t-keynote{background:var(--pl);color:var(--pt)}.t-press{background:var(--al);color:var(--at)}.t-linkedin{background:#deeefb;color:#0a4f8c}.t-video{background:var(--rl);color:var(--rt)}
+.ai-date{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+.ai-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px;line-height:1.4}
+.ai-title a{color:var(--text);text-decoration:none;border-bottom:1px solid rgba(0,0,0,.12)}
+.ai-title a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.ai-summary{font-size:12px;color:var(--text2);line-height:1.6}
+.ai-actions{display:flex;gap:8px;margin-top:7px;align-items:center;flex-wrap:wrap}
+.deeper-btn{font-size:11px;padding:3px 9px;cursor:pointer;background:var(--bl);border:none;border-radius:var(--r);color:var(--bt);font-family:'DM Sans',sans-serif;font-weight:500}
+.deeper-btn:hover{background:#b5d4f4}
+.unverified{font-size:10px;color:var(--text3);font-style:italic}
+.empty-feed{padding:16px 0;font-size:12px;color:var(--text3);text-align:center}
+.sk{background:linear-gradient(90deg,var(--surface2) 25%,var(--surface) 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--r);margin-bottom:10px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.mktg-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:16px 20px;margin-bottom:10px;box-shadow:var(--sh)}
+.mktg-item:last-child{margin-bottom:0}
+.mktg-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.4}
+.mktg-title a{color:var(--text);text-decoration:none;border-bottom:1px solid rgba(0,0,0,.12)}
+.mktg-title a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.mktg-meta{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:7px}
+.mktg-desc{font-size:13px;color:var(--text2);line-height:1.6}
+.footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="header">
+    <div class="hl">
+      <div class="logo"><div class="q1"></div><div class="q2"></div><div class="q3"></div><div class="q4"></div></div>
+      <div>
+        <div class="htitle">Microsoft Contact Tracker</div>
+        <div class="hsub">Sprinklr Account Intelligence</div>
+      </div>
+    </div>
+    <div class="hactions">
+      <button class="btn btn-g" onclick="clearData()">Clear</button>
+      <button class="btn btn-p" id="refreshBtn" onclick="refreshAll()">Refresh</button>
+    </div>
+  </div>
+
+  <div class="setup" id="setupBanner">
+    <div class="sicon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+    <div class="stext">
+      <strong>Add your Anthropic API key to enable refresh</strong>
+      <span>Stored locally in your browser only — never sent anywhere except Anthropic's API.</span>
+      <div class="sinrow">
+        <input class="sinput" type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." />
+        <button class="btn btn-p" onclick="saveKey()">Save key</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sbar">
+    <div class="sdot dg" id="statusDot"></div>
+    <span id="statusText">Ready — hit Refresh to pull the latest public activity</span>
+    <span class="sts" id="timestamp"></span>
+  </div>
+
+  <div id="mainContent">
+    <div class="section-label">Marketing leadership</div>
+    <div id="cards-marketing"></div>
+    <div class="section-label">Key contacts</div>
+    <div id="cards-contacts"></div>
+    <div class="section-label">Microsoft marketing department news</div>
+    <div id="mktg-news"><div class="empty-feed">Hit Refresh to load Microsoft marketing news.</div></div>
+  </div>
+
+  <div class="footer">
+    <span>Microsoft Contact Tracker · Sprinklr</span>
+    <span id="footer-ts">Not yet refreshed</span>
+  </div>
+</div>
+
+<script>
+var CONTACTS = [
+  {id:'numoto',name:'Takeshi Numoto',role:'EVP & Chief Marketing Officer',bio:'Microsoft\'s top marketing executive overseeing all global marketing, brand, advertising, and events. Reports directly to Satya Nadella. Primary decision-maker for enterprise marketing platform investments.',av:'TN',avClass:'av-blue',navUrl:'https://www.linkedin.com/sales/lead/ACwAAABodSAB-jEgLxZ2jL4K4gnVjMoY_ZlgH2U,NAME_SEARCH,uTFU?_ntb=K%2FZAaliNQFOOmKr0SqcGaw%3D%3D',section:'marketing'},
+  {id:'mehdi',name:'Yusuf Mehdi',role:'EVP, Consumer Chief Marketing Officer',bio:'Owns consumer-facing marketing for Copilot, Windows, Surface, Bing, and Edge. One of Microsoft\'s most externally visible marketing voices — prolific on the Microsoft blog.',av:'YM',avClass:'av-teal',navUrl:'https://www.linkedin.com/sales/lead/ACwAAAAMjd8B7nkeobo9IfSTo0OBPJbFLfiCkm4,NAME_SEARCH,jTPs?_ntb=7YHeWmftRtW3FCTlTffRbw%3D%3D',section:'marketing'},
+  {id:'hamilton',name:'Bill Hamilton',role:'VP, Marketing Technology & Worldwide Marketing Operations',bio:'Controls how Microsoft\'s marketing engine runs operationally. Oversees the MarTech stack and AI in marketing — including Sprinklr. The key internal stakeholder for social listening and publishing platform decisions.',av:'BH',avClass:'av-purple',navUrl:'https://www.linkedin.com/sales/lead/ACwAAADduwQB2r8YGR9aiVNJdvYsfdSyb_TXl_E,NAME_SEARCH,kzks?_ntb=fTMCJWMiQjui9AQpu9BIbw%3D%3D',section:'marketing'},
+  {id:'gordon',name:'Bryson Gordon',role:'CVP, Media, Partnerships & Agencies',bio:'Owns global media strategy, agency relationships, and brand partnerships. Reports directly to CMO Takeshi Numoto. Critical decision-maker for platform spend and vendor relationships.',av:'BG',avClass:'av-amber',navUrl:'https://www.linkedin.com/sales/lead/ACwAAAAdTCAB8FbRL8Dw4s4kPI0fkb-W89xMQIU,NAME_SEARCH,Ot4C?_ntb=UPqrIpBSQyuhA7y7g0walA%3D%3D',section:'marketing'},
+  {id:'ramachandran',name:'Nanda Ramachandran',role:'CMO, Windows & Devices',bio:'Joined Microsoft in April 2026 from Google where he led Pixel marketing globally for 12 years. New voice for Windows and Surface marketing strategy — watch closely as he establishes direction.',av:'NR',avClass:'av-red',navUrl:'https://www.linkedin.com/sales/lead/ACwAAAAyVAkBLCdLFs9yue_ld7GSYV2y-ssKH8E,NAME_SEARCH,QUUp?_ntb=P%2F3GspYORBG3XBT27GII0Q%3D%3D',section:'marketing'},
+  {id:'carr',name:'Michael Carr',role:'GM, Global Media',bio:'Leads global media strategy and buying across Microsoft\'s marketing organization. Key decision-maker for media platform investments and how Microsoft allocates paid media spend globally.',av:'MC',avClass:'av-blue',navUrl:'https://www.linkedin.com/sales/lead/ACwAAAS-xqwBnk_jO9v89lMD0o0cj3J3ZFty_Ww,NAME_SEARCH,2fhq?_ntb=X2XwdCYaS5CQasezXqxBZQ%3D%3D',section:'contacts'},
+  {id:'hoiseck',name:'Michael Hoiseck',role:'Director, MarTech',bio:'Deeply embedded in Microsoft\'s marketing operations and technology stack. Wants to be a Sprinklr champion internally but needs a strong narrative to advocate with. A key ally to develop.',av:'MH',avClass:'av-teal',navUrl:'https://www.linkedin.com/sales/lead/ACwAAA1-gMQB4dV7JQ2PrecZwNfabrJxQDISSvs,NAME_SEARCH,uOMJ?_ntb=pfcO7RC6Q3aHtb766GUvtQ%3D%3D',section:'contacts'},
+  {id:'clark',name:'Shy Clark',role:'GM, Data Science & Analytics',bio:'Leads data science and analytics for Microsoft\'s marketing org. Relevant to Sprinklr\'s social listening and data capabilities — owns the intelligence layer that informs marketing decisions.',av:'SC',avClass:'av-gray',navUrl:'https://www.linkedin.com/sales/lead/ACwAAALWSvQBqXledlBCUlNT7jVFO9lbuumm-Zw,NAME_SEARCH,NQ59?_ntb=XhBmh8hCRZe17%2B%2FqJeZNyA%3D%3D',section:'contacts'}
+];
+
+var apiKey = localStorage.getItem('msft_tracker_apikey') || '';
+var cachedData = JSON.parse(localStorage.getItem('msft_tracker_data') || '{}');
+var lastRefresh = localStorage.getItem('msft_tracker_lastrefresh') || '';
+var expanded = {};
+
+function deeper(q) {
+  var ctx = ' — Context: I am a Sprinklr strategic AE managing the Microsoft account exclusively. Microsoft uses Sprinklr for social listening and social media publishing.';
+  window.open('https://claude.ai/new?q=' + encodeURIComponent(q + ctx), '_blank');
+}
+
+function copyNavLink(url, btn) {
+  navigator.clipboard.writeText(url).then(function() {
+    btn.classList.add('copied');
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+    setTimeout(function() {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Sales Nav link';
+    }, 2000);
+  }).catch(function() {
+    prompt('Copy this link and paste into Edge:', url);
+  });
+}
+
+function toggleExpand(id) {
+  expanded[id] = !expanded[id];
+  var items = document.querySelectorAll('#feed-' + id + ' .activity-item');
+  var btn = document.getElementById('expand-btn-' + id);
+  var count = items.length;
+  if (expanded[id]) {
+    items.forEach(function(item) { item.classList.remove('hidden'); });
+    btn.textContent = 'Show less';
+  } else {
+    items.forEach(function(item, i) { if (i >= 3) item.classList.add('hidden'); });
+    btn.textContent = 'Show all ' + count;
+  }
+}
+
+window.onload = function() {
+  if (apiKey) {
+    document.getElementById('setupBanner').classList.add('hidden');
+    document.getElementById('apiKeyInput').value = apiKey;
+  }
+  if (lastRefresh) {
+    setStatus('ready', 'Last refreshed ' + lastRefresh);
+    document.getElementById('footer-ts').textContent = 'Last refreshed ' + lastRefresh;
+  }
+  renderShells();
+  if (cachedData && Object.keys(cachedData).length > 0) renderAll(cachedData);
+};
+
+function saveKey() {
+  var val = document.getElementById('apiKeyInput').value.trim();
+  if (!val) { alert('Please paste your API key'); return; }
+  apiKey = val;
+  localStorage.setItem('msft_tracker_apikey', apiKey);
+  document.getElementById('setupBanner').classList.add('hidden');
+  setStatus('ready', 'API key saved — ready to refresh');
+}
+
+function clearData() {
+  if (!confirm('Clear all cached data?')) return;
+  localStorage.removeItem('msft_tracker_data');
+  localStorage.removeItem('msft_tracker_lastrefresh');
+  cachedData = {}; lastRefresh = '';
+  renderShells();
+  setStatus('gray', 'Cleared');
+  document.getElementById('footer-ts').textContent = 'Not yet refreshed';
+}
+
+function setStatus(type, msg) {
+  var dot = document.getElementById('statusDot');
+  dot.className = 'sdot';
+  if (type === 'loading') dot.classList.add('da');
+  else if (type === 'ready') dot.classList.add('dGr');
+  else dot.classList.add('dg');
+  document.getElementById('statusText').textContent = msg;
+}
+
+function typeClass(t) {
+  var map = {'Blog':'t-blog','Interview':'t-interview','Keynote':'t-keynote','Press':'t-press','LinkedIn':'t-linkedin','Video':'t-video'};
+  return map[t] || 't-press';
+}
+
+function deeperBtn(q) {
+  if (!q) return '';
+  var safe = (q || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  return '<button class="deeper-btn" onclick="deeper(\'' + safe + '\')">Go deeper with Claude ↗</button>';
+}
+
+function renderShells() {
+  ['marketing','contacts'].forEach(function(section) {
+    var container = document.getElementById('cards-' + section);
+    container.innerHTML = '';
+    CONTACTS.filter(function(c) { return c.section === section; }).forEach(function(c) {
+      container.appendChild(buildCard(c, []));
+    });
+  });
+  document.getElementById('mktg-news').innerHTML = '<div class="empty-feed">Hit Refresh to load Microsoft marketing news.</div>';
+}
+
+function buildCard(contact, items) {
+  var div = document.createElement('div');
+  div.className = 'contact-card';
+  div.id = 'card-' + contact.id;
+
+  var navUrl = contact.navUrl || '';
+  var safeUrl = navUrl.replace(/'/g, "\\'");
+
+  var headerHtml = '<div class="contact-header">' +
+    '<div class="av ' + contact.avClass + '">' + contact.av + '</div>' +
+    '<div class="contact-info">' +
+    '<div class="contact-name">' + contact.name + '</div>' +
+    '<div class="contact-role">' + contact.role + '</div>' +
+    '<div class="contact-bio">' + contact.bio + '</div>' +
+    '<div class="contact-actions">' +
+    '<button class="nav-copy-btn" onclick="copyNavLink(\'' + safeUrl + '\', this)">' +
+    '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>' +
+    ' Copy Sales Nav link</button>' +
+    '</div></div></div>';
+
+  var feedHtml = '<div class="feed-area">';
+  feedHtml += '<div class="feed-header"><span class="feed-label">Recent public activity</span>';
+
+  if (items && items.length > 3) {
+    feedHtml += '<button class="expand-btn" id="expand-btn-' + contact.id + '" onclick="toggleExpand(\'' + contact.id + '\')">Show all ' + items.length + '</button>';
+  }
+  feedHtml += '</div>';
+  feedHtml += '<div id="feed-' + contact.id + '">';
+
+  if (!items || items.length === 0) {
+    feedHtml += '<div class="empty-feed">Hit Refresh to search for latest verified public activity.</div>';
+  } else {
+    items.forEach(function(item, i) {
+      var hidden = i >= 3 ? ' hidden' : '';
+      var hasUrl = item.url && item.url !== 'null' && item.url.length > 4;
+      var titleHtml = hasUrl ? '<a href="' + item.url + '" target="_blank" rel="noopener">' + item.title + ' ↗</a>' : item.title;
+      feedHtml += '<div class="activity-item' + hidden + '">';
+      feedHtml += '<div class="ai-top"><span class="ai-type ' + typeClass(item.type) + '">' + item.type + '</span><span class="ai-date">' + item.date + '</span></div>';
+      feedHtml += '<div class="ai-title">' + titleHtml + '</div>';
+      feedHtml += '<div class="ai-summary">' + item.summary + '</div>';
+      feedHtml += '<div class="ai-actions">';
+      if (!item.verified) feedHtml += '<span class="unverified">⚠ Verify before sharing</span>';
+      if (item.deeperQ) feedHtml += deeperBtn(item.deeperQ);
+      feedHtml += '</div></div>';
+    });
+  }
+
+  feedHtml += '</div></div>';
+  div.innerHTML = headerHtml + feedHtml;
+  return div;
+}
+
+function renderAll(d) {
+  ['marketing','contacts'].forEach(function(section) {
+    var container = document.getElementById('cards-' + section);
+    container.innerHTML = '';
+    CONTACTS.filter(function(c) { return c.section === section; }).forEach(function(c) {
+      var items = d.activity && d.activity[c.id] ? d.activity[c.id] : [];
+      container.appendChild(buildCard(c, items));
+    });
+  });
+
+  if (d.marketing) {
+    var mktg = document.getElementById('mktg-news');
+    if (!d.marketing.length) {
+      mktg.innerHTML = '<div class="empty-feed">No marketing news found. Try refreshing.</div>';
+    } else {
+      mktg.innerHTML = d.marketing.map(function(n) {
+        var titleHtml = n.url && n.url !== 'null' && n.url.length > 4 ? '<a href="' + n.url + '" target="_blank" rel="noopener">' + n.title + ' ↗</a>' : n.title;
+        return '<div class="mktg-item">' +
+          '<div class="mktg-title">' + titleHtml + '</div>' +
+          '<div class="mktg-meta">' + n.source + ' — ' + n.date + '</div>' +
+          '<div class="mktg-desc">' + n.desc + '</div>' +
+          (n.deeperQ ? '<div style="margin-top:8px">' + deeperBtn(n.deeperQ) + '</div>' : '') +
+          '</div>';
+      }).join('');
+    }
+  }
+}
+
+function showSkeletons() {
+  var sk = '<div class="contact-card" style="padding:20px"><div class="sk" style="height:60px;margin-bottom:8px"></div><div class="sk" style="height:80px"></div><div class="sk" style="height:70px;margin-top:8px"></div></div>';
+  document.getElementById('cards-marketing').innerHTML = sk + sk + sk;
+  document.getElementById('cards-contacts').innerHTML = sk + sk + sk;
+  document.getElementById('mktg-news').innerHTML = '<div class="sk" style="height:80px;margin-bottom:8px"></div><div class="sk" style="height:80px;margin-bottom:8px"></div><div class="sk" style="height:80px"></div>';
+}
+
+async function refreshAll() {
+  if (!apiKey) {
+    document.getElementById('setupBanner').classList.remove('hidden');
+    document.getElementById('apiKeyInput').focus();
+    return;
+  }
+  var btn = document.getElementById('refreshBtn');
+  btn.disabled = true; btn.textContent = 'Refreshing...';
+  setStatus('loading', 'Searching for latest verified public activity...');
+  showSkeletons();
+
+  var today = new Date().toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
+
+  var prompt = 'Today is ' + today + '. You are a research assistant for a Sprinklr strategic AE managing the Microsoft account exclusively. Microsoft uses Sprinklr for social listening and social media publishing.\n\nUse the web_search tool to find real, current, verified public activity for each person listed below. Search each person individually. Only include items you find via actual web search with real, working URLs. If you cannot find verified content for someone, return an empty array — never fabricate.\n\nReturn ONLY a raw JSON object. No markdown, no code fences.\n\n{"activity":{"numoto":[{"type":"Blog|Interview|Keynote|Press|LinkedIn|Video","date":"text","title":"text","summary":"2-3 sentences on what they said and why it matters for Microsoft marketing or Sprinklr","url":"real verified URL","verified":true,"deeperQ":"specific useful question for a Sprinklr AE"}],"mehdi":[],"hamilton":[],"gordon":[],"ramachandran":[],"carr":[],"hoiseck":[],"clark":[]},"marketing":[{"title":"text","source":"publication name","date":"text","url":"real verified URL","desc":"2-3 sentence summary of what this means for Microsoft marketing strategy","deeperQ":"question"}]}\n\nSearch instructions:\n- Takeshi Numoto: search "Takeshi Numoto Microsoft CMO 2026" and "Takeshi Numoto Microsoft marketing"\n- Yusuf Mehdi: search "Yusuf Mehdi Microsoft 2026" and "Yusuf Mehdi Copilot marketing"\n- Bill Hamilton: search "Bill Hamilton Microsoft marketing technology 2026"\n- Bryson Gordon: search "Bryson Gordon Microsoft 2026" and "Bryson Gordon Microsoft CMO media"\n- Nanda Ramachandran: search "Nanda Ramachandran Microsoft CMO Windows 2026"\n- Michael Carr: search "Michael Carr Microsoft global media 2026"\n- Michael Hoiseck: search "Michael Hoiseck Microsoft MarTech 2026"\n- Shy Clark: search "Shy Clark Microsoft data science analytics 2026"\n- Marketing news: search "Microsoft marketing department strategy 2026" and "Microsoft CMO marketing news 2026"\n\nReturn up to 10 activity items per person where found. verified:true only if you found the real URL via search. For marketing news return 5 items.\n\nIMPORTANT: deeperQ must be a specific, actionable question that a Sprinklr AE would genuinely want answered — not generic.';
+
+  try {
+    var response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 8000,
+        tools: [{"type": "web_search_20250305", "name": "web_search"}],
+        messages: [{role: 'user', content: prompt}]
+      })
+    });
+
+    if (!response.ok) {
+      var err = await response.json();
+      throw new Error(err.error && err.error.message ? err.error.message : 'API error ' + response.status);
+    }
+
+    var data = await response.json();
+    var raw = '';
+    data.content.forEach(function(block) { if (block.type === 'text') raw += block.text; });
+    raw = raw.trim().replace(/^```json\s*/, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
+    var parsed = JSON.parse(raw);
+
+    cachedData = parsed;
+    var ts = new Date().toLocaleString('en-US', {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
+    lastRefresh = ts;
+    localStorage.setItem('msft_tracker_data', JSON.stringify(parsed));
+    localStorage.setItem('msft_tracker_lastrefresh', ts);
+
+    expanded = {};
+    renderAll(parsed);
+    setStatus('ready', 'Updated — ' + ts);
+    document.getElementById('footer-ts').textContent = 'Last refreshed ' + ts;
+    document.getElementById('timestamp').textContent = ts;
+
+  } catch(e) {
+    setStatus('gray', 'Error: ' + e.message);
+    if (cachedData && Object.keys(cachedData).length > 0) renderAll(cachedData);
+    else renderShells();
+  } finally {
+    btn.disabled = false; btn.textContent = 'Refresh';
+  }
+}
+</script>
+</body>
+</html>
